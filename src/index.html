@@ -66,7 +66,7 @@
       // data // data that will be changed in the render view 
 
 
-      const rawData = localStorage.getItem('todos') || "[]"
+      // const rawData = localStorage.getItem('todos') || "[]"
     
 
       // var todos1 = [{name:'biking', completed:false},
@@ -74,14 +74,19 @@
       // ]
 
       const state = {
-        //todos1: todos1,
-        todos: JSON.parse(rawData)
+        nextId: 0,
+        todos: []
       };
         
 
         function updateData(how, state, data){
             if(how === "addItem") {
-              state.todos.push({name:data.item, completed:false})
+              state.todos.push({
+                name: data.item,
+                completed: false,
+                deleted: false,
+                added: false,
+              })
             }
 
             if(how === 'delete') {
@@ -117,11 +122,10 @@
 
       const ul = document.getElementById('item-list')
 
-      function renderList(items){
-
-          ul.innerHTML = ''
-         
+      function renderList(items){         
           items.forEach((item, i) => {
+
+            if (item.added !== true) {
             
               const li = document.createElement('li')
 
@@ -159,6 +163,16 @@
                     updateData('uncomplete', state, {item: item})
                   }
               })
+            
+            } else {
+              if (item.deleted === true) {
+
+              }
+
+              if (item.completed === true) {
+
+              }
+            }
           })
       }
 
