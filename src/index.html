@@ -82,15 +82,18 @@
         function updateData(how, state, data){
             if(how === "addItem") {
               state.todos.push({
+                id: state.nextId,
                 name: data.item,
                 completed: false,
                 deleted: false,
                 added: false,
               })
+
+              state.nextId += 1
             }
 
             if(how === 'delete') {
-              state.todos.splice(state.todos.indexOf(data.item),1)
+              data.item.deleted = true
             }
 
             if(how === 'complete') {
@@ -122,12 +125,17 @@
 
       const ul = document.getElementById('item-list')
 
+      function idForItem(item) {
+        return `todo-${item.id}`
+      }
+
       function renderList(items){         
           items.forEach((item, i) => {
 
             if (item.added !== true) {
             
               const li = document.createElement('li')
+              li.setAttribute('id', idForItem(item))
 
               li.innerHTML = item.name
               ul.appendChild(li)
@@ -165,12 +173,16 @@
               })
             
             } else {
-              if (item.deleted === true) {
+              const li = document.getElementById(idForItem(item))
 
+              if (item.deleted === true) {
+                ul.removeChild(li)
               }
 
               if (item.completed === true) {
-
+                li.classList.add('checked')
+              } else {
+                li.classList.remove('checked')
               }
             }
           })
