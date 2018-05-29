@@ -79,44 +79,41 @@
       };
         
 
-        function updateData(how, state, data){
-            if(how === "addItem") {
-              state.todos.push({
-                id: state.nextId,
-                name: data.item,
-                completed: false,
-                deleted: false,
-                added: false,
-              })
+      function updateData(how, state, data){
+        if(how === "addItem") {
+          state.todos.push({
+            id: state.nextId,
+            name: data.item,
+            completed: false,
+            deleted: false,
+            added: false,
+          })
 
-              state.nextId += 1
-            }
-
-            if(how === 'delete') {
-              data.item.deleted = true
-            }
-
-            if(how === 'complete') {
-              data.item.completed = true
-            }
-
-            if(how === 'uncomplete') {
-              data.item.completed = false
-            }
-
-            if(how === 'clearComplete') {
-              state.todos = state.todos.filter(next => next.completed === false)
-            }
-
-            console.log(state.todos)
-            render(state.todos)
-
+          state.nextId += 1
         }
 
+        if(how === 'delete') {
+          data.item.deleted = true
+        }
 
-      // view
+        if(how === 'complete') {
+          data.item.completed = true
+        }
+
+        if(how === 'uncomplete') {
+          data.item.completed = false
+        }
+
+        if(how === 'clearComplete') {
+          state.todos = state.todos.filter(next => next.completed === false)
+        }
+
+        console.log(state.todos)
+        render(state.todos)
+      }
 
 
+      // VIEW
 
       function render(data) {
         renderList(data)
@@ -130,69 +127,69 @@
       }
 
       function renderList(items){         
-          items.forEach((item, i) => {
+        items.forEach((item, i) => {
 
-            if (item.added !== true) {
+          if (item.added !== true) {
+          
+            const li = document.createElement('li')
+            li.setAttribute('id', idForItem(item))
+
+            li.innerHTML = item.name
+            ul.appendChild(li)
+            input.value = ''
+
+            // add button
+            const button = document.createElement('button')
+            li.appendChild(button)
+            button.innerHTML = 'x'
             
-              const li = document.createElement('li')
-              li.setAttribute('id', idForItem(item))
+            // button event
+            button.addEventListener('click', (eve) => {
+              updateData('delete', state, { item: item })
+            })
 
-              li.innerHTML = item.name
-              ul.appendChild(li)
-              input.value = ''
+            // add checkbox
+            const checkbox = document.createElement('input')
+            checkbox.type = 'checkbox'
+            li.prepend(checkbox)
+            checkbox.checked = item.completed
 
-              // add button
-              const button = document.createElement('button')
-              li.appendChild(button)
-              button.innerHTML = 'x'
-              
-              // button event
-              button.addEventListener('click', (eve) => {
-                updateData('delete', state, {item: item})
-              })
-
-              // add checkbox
-              const checkbox = document.createElement('input')
-              checkbox.type = 'checkbox'
-              li.prepend(checkbox)
-              checkbox.checked = item.completed
-
-              if(checkbox.checked === true) {
-                li.classList.add('checked')
-              }
-
-              // checkbox event
-              checkbox.addEventListener('click', (evt) => {
-
-                  if (item.completed  === false) {
-                    updateData('complete', state, {item: item})
-                  }
-                  else if (item.completed  === true){
-                    updateData('uncomplete', state, {item: item})
-                  }
-              })
-            
-            } else {
-              const li = document.getElementById(idForItem(item))
-
-              if (item.deleted === true) {
-                ul.removeChild(li)
-              }
-
-              if (item.completed === true) {
-                li.classList.add('checked')
-              } else {
-                li.classList.remove('checked')
-              }
+            if(checkbox.checked === true) {
+              li.classList.add('checked')
             }
-          })
+
+            // checkbox event
+            checkbox.addEventListener('click', (evt) => {
+
+                if (item.completed  === false) {
+                  updateData('complete', state, { item: item })
+                }
+                else if (item.completed  === true){
+                  updateData('uncomplete', state, { item: item })
+                }
+            })
+          
+          } else {
+            const li = document.getElementById(idForItem(item))
+
+            if (item.deleted === true) {
+              ul.removeChild(li)
+            }
+
+            if (item.completed === true) {
+              li.classList.add('checked')
+            } else {
+              li.classList.remove('checked')
+            }
+          }
+        })
       }
 
 
       function renderItemsLeft(items) {
-              const countItemLeft = document.getElementById('item-left') 
-              const itemLeft = items.filter(item => item.completed === false)
-              countItemLeft.innerHTML = itemLeft.length
+        const countItemLeft = document.getElementById('item-left') 
+        const itemLeft = items.filter(item => item.completed === false)
+        countItemLeft.innerHTML = itemLeft.length
       }
 
 
@@ -205,8 +202,6 @@
         else {
           ul.classList.add('completed')
         }
-
-         
       }
 
       function showActiveItem() {
@@ -232,7 +227,8 @@
 
       }
 
-      // events
+
+      // EVENTS
 
       const input = document.getElementById('item-input')
       input.addEventListener('keypress', (evt) => {
@@ -248,20 +244,13 @@
       const buttonShowAll = document.getElementById('button-show-all')
       buttonShowAll.addEventListener('click', showAllItem)
 
-
       const buttonShowActive = document.getElementById('button-show-active')
       buttonShowActive.addEventListener('click', showActiveItem)
 
       const buttonClearCompleted = document.getElementById('button-clear-completed')
       buttonClearCompleted.addEventListener('click', (evt) => {
-          updateData('clearComplete', state)
+        updateData('clearComplete', state)
       })
-
-
-
-
-
-
       
     </script>
 </body>
